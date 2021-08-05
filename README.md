@@ -1,35 +1,30 @@
-# ZENO Addon Wizard
+# ZENO Private Repository
 
-Demo project showing on how to add custom nodes to ZENO.
+Holding private ZENO projects that aren't open-source.
 
-# Setup
+# Setup (important)
 
-First of all, run this command:
+First of all, please add this to your `~/.bashrc`:
 ```bash
-git submodule update --init --recursive
+[ -f .bash_localrc ] && . .bash_localrc
 ```
-To fetch ZENO which is included a submodule.
+Then quit, and restart the shell.
+(This is to add `external/zeno` to `PYTHONPATH` every time you enter this folder)
 
 ## Build
 
 ```bash
-cmake -B build
-cmake --build build --parallel
+git submodule update --init --recursive
+make all
 ```
 
 ## Run
 
 ```bash
-./run.py
+make run
 ```
 
-Then open `graphs/MyPrimitiveOps.zsg` and click `Run`.
+## Windows
 
-# Coding
-
-The `YourProject/` is a demo project for showing how to add custom nodes in ZENO with its C++ API.
-
-See [MyPrimitiveOps.cpp](YourProject/MyPrimitiveOps.cpp) for custom primitive operation.
-See [CustomNumber.cpp](YourProject/CustomNumber.cpp) for defining custom object.
-
-Let me know if you need more demos here by opening an [issue](https://github.com/zenustech/zeno_addon_wizard/issues).
+"自生自灭", we could ensure Linux-only across the company in our private repo, ain't we?
+aye!
