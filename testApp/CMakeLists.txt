@@ -13,6 +13,7 @@ add_executable(testApp testApp.cpp)
 
 target_include_directories(testApp PRIVATE .)
 
-target_link_libraries(testApp PUBLIC zeno glut GL GLU)
+target_link_libraries(testApp PUBLIC glut GL GLU)
+target_link_libraries(testApp PUBLIC zeno zeno_projects)
 target_include_directories(testApp PRIVATE ../external/zeno/projects/oldzenbase/include)
 target_include_directories(testApp PRIVATE ../external/zeno/projects/zenvdb/include)
