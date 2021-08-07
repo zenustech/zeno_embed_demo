@@ -7,7 +7,9 @@
 #include <GL/gl.h>
 #include <zeno/types/DictObject.h>
 #include <zeno/PrimitiveObject.h>
+#ifdef __linux__
 #include <unistd.h>
+#endif
 
 static float lastx = 0, lasty = 0;
 static float fx=0,fy=0,ax=0,ay=0;
@@ -110,7 +112,11 @@ static void displayFunc() {
     auto obj2 = scene->getGraph().getGraphOutput<zeno::PrimitiveObject>("oPig");
     auto obj3 = scene->getGraph().getGraphOutput<zeno::PrimitiveObject>("oBowl");
     auto c = scene->getGraph().getGraphOutput<zeno::NumericObject>("oCenter")->get<zeno::vec3f>();
-    //glutWireTeapot(1.0);
+#if 0
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(0);
+    glDrawArrays(GL_POINTS, 1);
+#else
     glBegin(GL_POINTS);
     for(int i=0;i<obj2->size();i++)
     {
@@ -130,8 +136,11 @@ static void displayFunc() {
         glVertex3f(c[0],c[1], c[2]);
         glVertex3f(c[0]+10*fx, c[1]+10*fy, c[2]);
     glEnd();
+#endif
 
-    usleep(60000);
+#ifdef __linux__
+    usleep(20000);
+#endif
     glutSwapBuffers();
     
     glutPostRedisplay();
