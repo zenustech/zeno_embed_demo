@@ -6,6 +6,7 @@
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <zeno/types/DictObject.h>
+#include <zeno/PrimitiveObject.h>
 static float lastx = 0, lasty = 0;
 static float fx=0,fy=0,ax=0,ay=0;
 static bool clicked = false;
@@ -98,9 +99,10 @@ static void displayFunc() {
     zeno::vec3f vec(fx, fy, 0);
     auto obj = std::make_shared<zeno::NumericObject>(vec);
     scene->getGraph().setGraphInput("mouse", std::move(obj));
-
-    
-    glutWireTeapot(1.0);
+    scene->getGraph().applyGraph();
+    auto obj2 = scene->getGraph().getGraphOutput<zeno::PrimitiveObject>("oParticles");
+    printf("%d\n", obj2->size());
+    //glutWireTeapot(1.0);
 
 
     glutSwapBuffers();
