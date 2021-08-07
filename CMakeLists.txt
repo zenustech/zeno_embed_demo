@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 17)
-project(zeno_addon_wizard LANGUAGES C CXX)
+project(zeno_embed_demo LANGUAGES C CXX)
 
 add_subdirectory(external/zeno)
 

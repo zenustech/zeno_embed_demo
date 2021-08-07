@@ -96,7 +96,7 @@ static void displayFunc() {
     glRotatef(rotateY, 0.0, 1.0, 0.0);
 
     
-
+    glutWireTeapot(1.0);
 
 
     glutSwapBuffers();
