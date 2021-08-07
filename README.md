@@ -1,33 +1,24 @@
-# ZENO Private Repository
+# ZENO Embed Demo
 
-Holding private ZENO projects that aren't open-source.
+Demo project showing on how to use ZENO in a embed environment.
 
-# Setup (important)
+# Setup
 
-First of all, please add this to your `~/.bashrc`:
+First of all, run this command:
 ```bash
-[ -f .bash_localrc ] && . .bash_localrc
+git submodule update --init --recursive
 ```
-Then quit, and restart the shell.
-(This is to add `external/zeno` to `PYTHONPATH` every time you enter this folder)
+To fetch ZENO which is included a submodule.
 
 ## Build
 
 ```bash
-git submodule update --init --recursive
-make all
+cmake -B build
+cmake --build build --parallel
 ```
 
 ## Run
 
 ```bash
-make run
+./run.py
 ```
-
-## Windows
-
-"自生自灭", we could ensure Linux-only across the company in our private repo, ain't we?
-aye!
-
-## let's make a small CPP demo of zeno embeding here
-using GLUT to shot pigHead into a soft bowl. 
