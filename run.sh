@@ -1,3 +1,3 @@
 #!/bin/bash
 
-build/testApp/testApp
+ldd build/testApp/testApp
