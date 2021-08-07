@@ -24,7 +24,8 @@ float camera_trans_lag[] = {0, 0, -3};
 float camera_rot_lag[] = {0, 0, 0};
 
 float rotateX = 20.0f, rotateY = 0.0f;
-float translateX = 0.0f, translateY = 0.0f, translateZ = -2.0f;
+float translateX = 0.0f, translateY = 0.0f, translateZ = -10.0f;
+static std::shared_ptr<zeno::Scene> scene;
 
 static void reshape(int w, int h)
 {
@@ -40,6 +41,26 @@ static void reshape(int w, int h)
 
 static void click(int button, int state, int x, int y)
 {
+    if (state == GLUT_DOWN)
+    {
+        mouseButtons |= 1<<button;
+    }
+    else if (state == GLUT_UP)
+    {
+        mouseButtons = 0;
+        fx = 0;
+        fy = 0;
+    }
+
+    mouseOldX = x;
+    mouseOldY = y;
+    glutPostRedisplay();
+}
+
+static void motion(int x, int y)
+{
+    
+
     float dx, dy;
     dx = (float)(x - mouseOldX);
     dy = (float)(y - mouseOldY);
@@ -56,32 +77,12 @@ static void click(int button, int state, int x, int y)
     }
     else if (mouseButtons == 4)
     {
-        translateZ += dy * 0.01f;
+        fx = dx;
+        fy = -dx;
     }
 
     mouseOldX = x;
     mouseOldY = y;
-}
-
-static void motion(int x, int y)
-{
-    
-
-    if (clicked)
-    {
-        int ddx = x - lastx;
-        int ddy = y - lasty;
-        fx = ddx;
-        fy = -ddy;
-        ax = x/(float)nx;
-        ay = 1-y/(float)ny;
-        lastx = x;
-        lasty = y;
-    }
-    else {
-        fx = 0;
-        fy = 0;
-    }
 
     glutPostRedisplay();
 }
@@ -94,6 +95,9 @@ static void displayFunc() {
     glTranslatef(translateX, translateY, translateZ);
     glRotatef(rotateX, 1.0, 0.0, 0.0);
     glRotatef(rotateY, 0.0, 1.0, 0.0);
+    zeno::vec3f vec(fx, fy, 0);
+    auto obj = std::make_shared<zeno::NumericObject>(vec);
+    scene->getGraph().setGraphInput("mouse", std::move(obj));
 
     
     glutWireTeapot(1.0);
@@ -115,6 +119,12 @@ static void keyboardFunc(unsigned char key, int x, int y) {
 
 int main(int argc, char* argv[])
 {
+    scene = zeno::createScene();
+    scene->loadScene(
+    #include "my_zeno_scene.h"
+    );
+    scene->switchGraph("main");
+
     nx = 512;
     ny = 512;
     glutInit(&argc, argv);
