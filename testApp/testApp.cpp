@@ -3,10 +3,12 @@
 #include <zeno/types/FunctionObject.h>
 #include <zeno/types/NumericObject.h>
 #include <zeno/utils/zlog.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <GL/gl.h>
 #include <zeno/types/DictObject.h>
 #include <zeno/PrimitiveObject.h>
+#include <unistd.h>
+
 static float lastx = 0, lasty = 0;
 static float fx=0,fy=0,ax=0,ay=0;
 static bool clicked = false;
@@ -38,6 +40,7 @@ static void reshape(int w, int h)
 
     nx = w;
     ny = h;
+    glutPostRedisplay();
 }
 
 static void click(int button, int state, int x, int y)
@@ -78,8 +81,8 @@ static void motion(int x, int y)
     }
     else if (mouseButtons == 4)
     {
-        fx = dx;
-        fy = -dx;
+        fx = dx*3;
+        fy = -dy*3;
     }
 
     mouseOldX = x;
@@ -87,10 +90,14 @@ static void motion(int x, int y)
 
     glutPostRedisplay();
 }
+
 static void displayFunc() {
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS); 
+    glEnable(GL_MULTISAMPLE);
     glViewport(0, 0, nx, ny);
     glClearColor(0.23f, 0.23f, 0.23f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(translateX, translateY, translateZ);
@@ -100,12 +107,33 @@ static void displayFunc() {
     auto obj = std::make_shared<zeno::NumericObject>(vec);
     scene->getGraph().setGraphInput("mouse", std::move(obj));
     scene->getGraph().applyGraph();
-    auto obj2 = scene->getGraph().getGraphOutput<zeno::PrimitiveObject>("oParticles");
-    printf("%d\n", obj2->size());
+    auto obj2 = scene->getGraph().getGraphOutput<zeno::PrimitiveObject>("oPig");
+    auto obj3 = scene->getGraph().getGraphOutput<zeno::PrimitiveObject>("oBowl");
+    auto c = scene->getGraph().getGraphOutput<zeno::NumericObject>("oCenter")->get<zeno::vec3f>();
     //glutWireTeapot(1.0);
+    glBegin(GL_POINTS);
+    for(int i=0;i<obj2->size();i++)
+    {
+        auto p = obj2->attr<zeno::vec3f>("pos")[i];
+        glColor3f(1,0,0);
+        glVertex3f(p[0],p[1],p[2]);
+    }
+    for(int i=0;i<obj3->size();i++)
+    {
+        auto p = obj3->attr<zeno::vec3f>("pos")[i];
+        glColor3f(1,1,0);
+        glVertex3f(p[0],p[1],p[2]);
+    }
+    glEnd();
+    glBegin(GL_LINES);
+        glColor3f(0,1,0);
+        glVertex3f(c[0],c[1], c[2]);
+        glVertex3f(c[0]+10*fx, c[1]+10*fy, c[2]);
+    glEnd();
 
-
+    usleep(60000);
     glutSwapBuffers();
+    
     glutPostRedisplay();
 }
 
@@ -118,7 +146,11 @@ static void keyboardFunc(unsigned char key, int x, int y) {
     if (key == 27)
         exit(0);
 }
-
+void idle()
+{
+    
+    glutPostRedisplay();
+}
 int main(int argc, char* argv[])
 {
     scene = zeno::createScene();
@@ -127,17 +159,23 @@ int main(int argc, char* argv[])
     );
     scene->switchGraph("main");
 
-    nx = 512;
-    ny = 512;
+    nx = 1024;
+    ny = 1024;
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    
+    
+     
+    glutSetOption(GLUT_MULTISAMPLE, 8);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(nx, ny);
     glutCreateWindow("GLUT Window");
+    
     glutDisplayFunc(displayFunc);
     glutKeyboardFunc(keyboardFunc);
     glutMouseFunc(click);
     glutReshapeFunc(reshape);
     glutMotionFunc(motion);
+    glutIdleFunc(idle);
     glutMainLoop();
 }
