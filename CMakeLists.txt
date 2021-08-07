@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
 project(zeno_embed_demo LANGUAGES C CXX)
 
 #set(CMAKE_LINK_WHAT_YOU_USE TRUE)
@@ -11,6 +12,7 @@ set(EXTENSION_gmpm ON CACHE BOOL "For Embeding Usage")
 set(EXTENSION_mesher ON CACHE BOOL "For Embeding Usage")
 set(EXTENSION_zenvdb ON CACHE BOOL "For Embeding Usage")
 set(EXTENSION_FastFLIP ON CACHE BOOL "For Embeding Usage")
+set(EXTENSION_Rigid OFF CACHE BOOL "For Embeding Usage")
 set(ZFX_ENABLE_CUDA ON CACHE BOOL "For Embeding Usage")
 add_subdirectory(external/zeno)
 

@@ -105,6 +105,7 @@ static void displayFunc() {
     glTranslatef(translateX, translateY, translateZ);
     glRotatef(rotateX, 1.0, 0.0, 0.0);
     glRotatef(rotateY, 0.0, 1.0, 0.0);
+
     zeno::vec3f vec(fx, fy, 0);
     auto obj = std::make_shared<zeno::NumericObject>(vec);
     scene->getGraph().setGraphInput("mouse", std::move(obj));
@@ -112,11 +113,7 @@ static void displayFunc() {
     auto obj2 = scene->getGraph().getGraphOutput<zeno::PrimitiveObject>("oPig");
     auto obj3 = scene->getGraph().getGraphOutput<zeno::PrimitiveObject>("oBowl");
     auto c = scene->getGraph().getGraphOutput<zeno::NumericObject>("oCenter")->get<zeno::vec3f>();
-#if 0
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(0);
-    glDrawArrays(GL_POINTS, 1);
-#else
+
     glBegin(GL_POINTS);
     for(int i=0;i<obj2->size();i++)
     {
@@ -136,10 +133,9 @@ static void displayFunc() {
         glVertex3f(c[0],c[1], c[2]);
         glVertex3f(c[0]+10*fx, c[1]+10*fy, c[2]);
     glEnd();
-#endif
 
 #ifdef __linux__
-    usleep(20000);
+    usleep(17000);
 #endif
     glutSwapBuffers();
     
