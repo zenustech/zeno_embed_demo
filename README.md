@@ -13,12 +13,11 @@ To fetch ZENO which is included a submodule.
 ## Build
 
 ```bash
-cmake -B build
-cmake --build build --parallel
+make all
 ```
 
 ## Run
 
 ```bash
-./run.py
+make run
 ```

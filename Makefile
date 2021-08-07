@@ -1,5 +1,5 @@
 run: all
-	build/testApp/testApp
+	./run.sh
 
 all:
 	cmake -B build
