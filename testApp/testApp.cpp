@@ -114,6 +114,7 @@ static void displayFunc() {
     auto obj3 = scene->getGraph().getGraphOutput<zeno::PrimitiveObject>("oBowl");
     auto c = scene->getGraph().getGraphOutput<zeno::NumericObject>("oCenter")->get<zeno::vec3f>();
 
+    printf("** rendering %zd points\n", obj2->size() + obj3->size());
     glBegin(GL_POINTS);
     for(int i=0;i<obj2->size();i++)
     {
